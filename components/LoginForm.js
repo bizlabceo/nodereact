@@ -2,12 +2,15 @@ import { Form, Input, Button } from "antd";
 import { useCallback, useState } from "react";
 import Link from "next/link";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import { loginAction } from "../reducers/user";
 
 const ButtonWrapper = styled.div`
   margin-top: 10px;
 `;
 
-const LoginForm = ({ setIsLoggedIn }) => {
+const LoginForm = () => {
+  const dispatch = useDispatch();
   const [id, setId] = useState("");
   //useState는 항상 2가지가 있는 배열을 리턴한다 [stae,state를 컨들롤하는 함수]
   const [password, setPassword] = useState("");
@@ -21,6 +24,7 @@ const LoginForm = ({ setIsLoggedIn }) => {
   }, []);
 
   const onSubmitForm = useCallback(() => {
+    dispatch(loginAction({ id, password }));
     console.log(id, password);
     setIsLoggedIn(true);
   }, [id, password]);
