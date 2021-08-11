@@ -6,13 +6,17 @@ import useInput from "../hooks/useInput";
 import styled from "styled-components";
 import Checkbox from "antd/lib/checkbox/Checkbox";
 import Password from "antd/lib/input/Password";
+import { SIGN_UP_REQUEST } from "../reducers/user";
+import { useDispatch, useSelector } from "react-redux";
 
 const Errormessage = styled.div`
   color: red;
 `;
 
 const signup = () => {
-  const [id, onChangeId] = useInput("");
+  const dispatch = useDispatch();
+  const { signUpLoading } = useSelector((state) => state.user);
+  const [email, onChangeEmail] = useInput("");
   const [nickname, onChangeNick] = useInput("");
   const [password, onChangePassword] = useInput("");
 
@@ -41,7 +45,11 @@ const signup = () => {
     if (!term) {
       return setTermError(true);
     }
-    console.log(id, nickname, password);
+    console.log(email, nickname, password);
+    dispatch({
+      type: SIGN_UP_REQUEST,
+      data: { email, password, nickname },
+    });
   }, [Password, passwordCheck, term]);
 
   return (
@@ -51,9 +59,15 @@ const signup = () => {
       </Head>
       <Form onFinish={onSubmit}>
         <div>
-          <label htmlFor="user-id">id</label>
+          <label htmlFor="user-email">email</label>
           <br />
-          <Input name="user-id" value={id} required onChange={onChangeId} />
+          <Input
+            name="user-email"
+            type="email"
+            value={email}
+            required
+            onChange={onChangeEmail}
+          />
         </div>
         <div>
           <label htmlFor="user-nick">nickname</label>
@@ -95,7 +109,7 @@ const signup = () => {
           {termError && <Errormessage>you sudo agree</Errormessage>}
         </div>
         <div>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" loading={signUpLoading}>
             sign up
           </Button>
         </div>
